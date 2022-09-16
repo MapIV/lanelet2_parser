@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<package format="2">
+    <name>lanelet2_parser</name>
+    <version>1.0.0</version>
+    <description>The lanelet2 parser package</description>
+    <maintainer email="tomoya.sato@tier4.jp">Tomoya-Sato</maintainer>
+    <author>Tomoya-Sato</author>
+    <license>NONE</license>
+
+    <buildtool_depend>catkin</buildtool_depend>
+
+    <export>
+    </export>
+</package>
