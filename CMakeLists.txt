@@ -23,6 +23,7 @@ include_directories(
 
 set (LL2_LIBS
   lib/lanelet2_parser.cpp
+  lib/tinyxml2.cpp
 )
 
 add_library(lanelet2_parser ${LL2_LIBS})
