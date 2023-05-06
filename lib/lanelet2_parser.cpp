@@ -143,6 +143,56 @@ bool LaneletParser::isInside(const double& x, const double& y, double& elev)
   return false;
 }
 
+bool LaneletParser::isInside(const double& x, const double& y, double& elev, int& lane_id)
+{
+  for (int lanelet_id = 0; lanelet_id < ll2_lanelets_.size(); lanelet_id++)
+  {
+    std::vector<LL2Point> right_line, left_line;
+    getLanePointVec(lanelet_id, right_line, left_line);
+
+    int cross_num = 0;    
+    LL2Point last_p = right_line[0];
+    double min_range = (right_line[0].local_x - x) * (right_line[0].local_x - x) + (right_line[0].local_y - y) * (right_line[0].local_y);
+    elev = right_line[0].elevation;
+    for (int i = 1; i < right_line.size(); i++)
+    {
+      LL2Point q = right_line[i];
+      if (isCross(x, y, last_p, q)) cross_num++;
+      last_p = q;
+
+      double range = (right_line[i].local_x - x) * (right_line[i].local_y - y) + (right_line[i].local_y - y) * (right_line[i].local_y - y); 
+      if (range < min_range)
+      {
+        min_range = range;
+        elev = right_line[i].elevation;
+      }
+    }
+
+    for (int i = left_line.size() - 1; i >= 0; i--)
+    {
+      LL2Point q = left_line[i];
+      if (isCross(x, y, last_p, q)) cross_num++;
+      last_p = q;
+
+      double range = (left_line[i].local_x - x) * (left_line[i].local_y - y) + (left_line[i].local_y - y) * (left_line[i].local_y - y); 
+      if (range < min_range)
+      {
+        min_range = range;
+        elev = left_line[i].elevation;
+      }
+    }
+
+    if (isCross(x, y, last_p, right_line[0])) cross_num++;
+
+    if (cross_num % 2 == 1) {
+      lane_id = lanelet_id;
+      return true;
+    }
+  }
+
+  return false;
+}
+
 bool LaneletParser::isCross(const double& x, const double& y, const LL2Point& p, const LL2Point& q)
 {
   if ((p.local_y < y && q.local_y < y) || (y < p.local_y && y < q.local_y))
