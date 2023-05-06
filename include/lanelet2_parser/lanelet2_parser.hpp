@@ -13,6 +13,7 @@ public:
     return ll2_lanelets_.size();
   }
   bool isInside(const double& x, const double& y, double& elev);
+  bool isInside(const double& x, const double& y, double& elev, int& lane_id);
 
 private:
   LL2Points ll2_points_;
